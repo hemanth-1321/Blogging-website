@@ -52,8 +52,12 @@ export const createPost = async (req, res) => {
       img: imgUrl,
       author: userId,
     });
-    user.posts.push(newPost._id);
+
     await newPost.save();
+
+    user.posts.push(newPost._id);
+    await user.save();
+    // console.log(newPost);
 
     res.status(201).json(newPost);
   } catch (error) {
@@ -226,6 +230,7 @@ export const likePost = async (req, res) => {
     });
   }
 };
+
 export const unlikePost = async (req, res) => {
   try {
     const postId = req.params.id;

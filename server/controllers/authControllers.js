@@ -78,7 +78,7 @@ export const signin = async (req, res) => {
         username: user.username,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" } // Optional: Set token expiration
+      { expiresIn: "24h" } // Optional: Set token expiration
     );
 
     res.json({

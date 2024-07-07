@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const { Schema } = mongoose; // Import Schema from mongoose
 
 // Define user schema
@@ -42,6 +43,7 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+
     posts: [
       {
         type: mongoose.Schema.Types.ObjectId,
