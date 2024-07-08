@@ -42,6 +42,14 @@ export const register = async (req, res) => {
       },
       process.env.JWT_SECRET
     );
+
+    // Set the JWT token as a cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
+
     res.status(201).json({
       message: "User created successfully",
       user: newUser,
@@ -54,6 +62,7 @@ export const register = async (req, res) => {
     });
   }
 };
+
 export const signin = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -80,6 +89,13 @@ export const signin = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "24h" } // Optional: Set token expiration
     );
+
+    // Set the JWT token as a cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
 
     res.json({
       token: token,

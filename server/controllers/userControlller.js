@@ -1,4 +1,6 @@
 import { User } from "../models/UserModel.js";
+import bcrypt from "bcrypt";
+import { v2 as cloudinary } from "cloudinary";
 
 export const getUserProfile = async (req, res) => {
   const { username } = req.params;
@@ -157,6 +159,103 @@ export const getFollowing = async (req, res) => {
     });
   } catch (error) {
     res.status(500).josn({
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+export const updateUserProfile = async (req, res) => {
+  const {
+    username,
+    email,
+    currentPassword,
+    newPassword,
+    bio,
+    link,
+    profileImg,
+    coverImg,
+  } = req.body;
+
+  console.log("Request Body:", req.body); // Log the entire request body
+  console.log("Bio:", bio); // Log the bio separately
+
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User Not Found",
+      });
+    }
+
+    if (
+      (newPassword && !currentPassword) ||
+      (!newPassword && currentPassword)
+    ) {
+      return res.status(400).json({
+        message: "Enter both newPassword and currentPassword",
+      });
+    }
+
+    if (newPassword && currentPassword) {
+      const match = await bcrypt.compare(currentPassword, user.password);
+      if (!match) {
+        return res.status(400).json({
+          message: "currentPassword does not match",
+        });
+      }
+
+      if (newPassword.length < 6) {
+        return res.status(400).json({
+          message: "Password must be at least 6 characters",
+        });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    if (profileImg) {
+      if (user.profileImg) {
+        await cloudinary.uploader.destroy(
+          user.profileImg.split("/").pop().split(".")[0]
+        );
+      }
+      const uploadResponse = await cloudinary.uploader.upload(profileImg);
+      user.profileImg = uploadResponse.secure_url;
+    }
+
+    if (coverImg) {
+      if (user.coverImg) {
+        await cloudinary.uploader.destroy(
+          user.coverImg.split("/").pop().split(".")[0]
+        );
+      }
+      const uploadResponse = await cloudinary.uploader.upload(coverImg);
+      user.coverImg = uploadResponse.secure_url;
+    }
+
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.bio = bio || user.bio;
+    user.link = link || user.link;
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: {
+        username: user.username,
+        email: user.email,
+        bio: user.bio,
+        link: user.link,
+        profileImg: user.profileImg,
+        coverImg: user.coverImg,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
       message: "Internal server error",
       error: error.message,
     });

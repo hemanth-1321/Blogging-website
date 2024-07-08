@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const { Schema } = mongoose;
 
 const postSchema = new Schema(
@@ -8,7 +7,6 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
-
     img: {
       type: String,
     },
@@ -20,12 +18,19 @@ const postSchema = new Schema(
     ],
     author: {
       type: Schema.Types.ObjectId,
-      ref: "User", // Reference to User model
+      ref: "User",
       required: true,
     },
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
     createdAt: { type: Date, default: Date.now() },
   },
   { timestamps: true }
 );
 
-export const Post = mongoose.model("Post", postSchema);
+const Post = mongoose.model("Post", postSchema);
+export { Post };

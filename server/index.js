@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import routes from "./routes/routes.js";
 import { DBconnection } from "./DB.js";
 import { v2 as cloudinary } from "cloudinary";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 cloudinary.config({
@@ -16,6 +17,7 @@ DBconnection();
 const port = process.env.PORT || 1000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use("/api", routes);
 app.listen(port, () => {
