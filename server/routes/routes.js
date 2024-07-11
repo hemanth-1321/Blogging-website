@@ -1,6 +1,6 @@
 // routes.js
 import express from "express";
-import { register, signin } from "../controllers/authControllers.js";
+import { logout, register, signin } from "../controllers/authControllers.js";
 import {
   createComment,
   createPost,
@@ -28,6 +28,7 @@ const router = express.Router();
 //auth Routes
 router.post("/register", register);
 router.post("/login", signin);
+router.post("/logout", logout);
 
 //post Routes
 router.post("/posts/create", authenticate, createPost); // Use the upload middleware

@@ -165,11 +165,18 @@ export const updatePost = async (req, res) => {
 
 export const getAllposts = async (req, res) => {
   try {
-    const posts = await Post.find().populate("author", "name");
+    const page = parseInt(req.query.page) || 1; // Get page number from query parameter or default to 1
+    const limit = 10; // Number of posts per page
 
-    res.status(201).json(posts);
+    const posts = await Post.find()
+      .populate("author", "username")
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json(posts);
+    console.log(posts);
   } catch (error) {
-    res.status(401).json({
+    res.status(500).json({
       message: "Error in get all Posts",
       error: error.message,
     });

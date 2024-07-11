@@ -46,7 +46,7 @@ export const register = async (req, res) => {
     // Set the JWT token as a cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });
 
@@ -93,7 +93,7 @@ export const signin = async (req, res) => {
     // Set the JWT token as a cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     });
 
@@ -102,6 +102,25 @@ export const signin = async (req, res) => {
     });
   } catch (error) {
     console.error("Error during user signin:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const logout = (req, res) => {
+  try {
+    res.cookie("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Only set secure flag in production
+      sameSite: "Strict",
+      expires: new Date(0), // Set cookie to expire immediately
+    });
+    res.status(200).json({
+      message: "Logout successful",
+    });
+  } catch (error) {
+    console.error("Error during logout:", error);
     res.status(500).json({
       message: "Internal server error",
     });
