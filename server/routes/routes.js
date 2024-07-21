@@ -44,7 +44,7 @@ router.post("/posts/:id/comments", authenticate, createComment);
 router.get("/posts/:id/comments", authenticate, getComments);
 //userProfileRoutes
 
-router.get("/:username", getUserProfile);
+router.get("/profile/:username", getUserProfile);
 router.post("/follow/:id", authenticate, follow);
 router.post("/unfollow/:id", authenticate, unFollow);
 router.get("/followers/:userId", authenticate, getFollowers);

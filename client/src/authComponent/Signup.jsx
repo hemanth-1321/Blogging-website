@@ -18,7 +18,7 @@ export const Signup = () => {
       });
       toast.success("SignUp Sucessfull!");
       console.log("submitted", response.data);
-      navigate("/profile");
+      navigate("/home");
     } catch (error) {
       toast.error("SignUp Failed!");
       console.log("falied", error.message);

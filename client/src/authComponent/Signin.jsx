@@ -3,23 +3,28 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../userSlice";
+
 export const Signin = () => {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+
   const [password, setpassword] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handlerSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axiosInstance.post("/login", {
         username,
-        email,
+
         password,
       });
 
       toast.success("Login Sucessfull!");
       console.log("submitted", response.data);
+      dispatch(setUser(response.data.user));
       navigate("/home");
     } catch (error) {
       toast.error("Login Failed!");
