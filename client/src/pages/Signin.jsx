@@ -3,13 +3,17 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
-
+import { useSelector, useDispatch } from "react-redux";
 import { Icon } from "../components/Icon";
+import { setUsername } from "../redux/counter/userSlice";
 export const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); // Corrected to camelCase
   const [loading, setLoading] = useState(false); // Include the loading state
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.user.username);
+  console.log(username);
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
@@ -20,9 +24,11 @@ export const Signin = () => {
         email,
         password,
       });
+      const { username } = response.data;
+      dispatch(setUsername(username));
       toast.success("SignUp Successful!");
       console.log("submitted", response.data);
-      navigate("/feed");
+      navigate(`/profile/${username}`);
     } catch (error) {
       toast.error("SignUp Failed!");
       console.log("failed", error.message);

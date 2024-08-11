@@ -3,28 +3,32 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
-import { Icon } from "../components/Icon";
+import { useDispatch } from "react-redux";
+import { setUsername } from "../redux/counter/userSlice";
 
 export const Signup = () => {
-  const [username, setUsername] = useState("");
+  const [fullname, setFullName] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handlerSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const response = await axiosInstance.post("/register", {
-        username,
+        fullname,
+        username: usernameInput,
         email,
         password,
       });
       toast.success("SignUp Successful!");
       console.log("submitted", response.data);
-      navigate("/feed");
+      dispatch(setUsername(usernameInput));
+      navigate(`/profile/${usernameInput}`);
     } catch (error) {
       if (error.response && error.response.status === 409) {
         toast.error("User Already Exists, please do login");
@@ -39,14 +43,26 @@ export const Signup = () => {
 
   return (
     <div className="bg-black h-screen w-screen relative flex flex-col justify-center items-center">
-      <Icon />
-
       <h1 className="text-slate-300 text-xl lg:text-3xl mb-8 font-bold text-center">
         Register Via Email!
       </h1>
       <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg px-10 py-8">
         <ToastContainer />
         <form className="flex flex-col" onSubmit={handlerSubmit}>
+          <label
+            className="text-slate-300 text-xl m-2 font-bold"
+            htmlFor="username"
+          >
+            FullName
+          </label>
+          <input
+            className="lg:p-2 rounded outline-none"
+            type="text"
+            id="fullname"
+            placeholder="Full-Name"
+            value={fullname}
+            onChange={(e) => setFullName(e.target.value)}
+          />
           <label
             className="text-slate-300 text-xl m-2 font-bold"
             htmlFor="username"
@@ -58,8 +74,8 @@ export const Signup = () => {
             type="text"
             id="username"
             placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={usernameInput}
+            onChange={(e) => setUsernameInput(e.target.value)}
           />
           <label
             className="text-slate-300 text-xl m-2 font-bold"

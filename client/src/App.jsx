@@ -6,16 +6,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
 import { Signup } from "./pages/Signup";
 import { Signin } from "./pages/Signin";
+import { ProfilePage } from "./pages/ProfilePage";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Signin />} />
+        <Route path="/profile/:username" element={<ProfilePage />} />
       </Routes>
     </Router>
   );

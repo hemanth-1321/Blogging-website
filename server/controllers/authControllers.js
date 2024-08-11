@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    console.log(username, email, password);
-    if (!username || !email || !password) {
+    const { fullname, username, email, password } = req.body;
+    console.log(fullname, username, email, password);
+    if (!fullname || !username || !email || !password) {
       return res.status(400).json({
         message: "Invalid request body format",
       });
@@ -27,6 +27,7 @@ export const register = async (req, res) => {
     console.log(hashedPassword);
     // Create new user
     const newUser = await User.create({
+      fullname,
       username,
       email,
       password: hashedPassword,
@@ -99,6 +100,7 @@ export const signin = async (req, res) => {
 
     res.json({
       token: token,
+      username: user.username,
     });
   } catch (error) {
     console.error("Error during user signin:", error);
