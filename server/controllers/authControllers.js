@@ -65,9 +65,9 @@ export const register = async (req, res) => {
 
 export const signin = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({
         message: "Invalid username or password",
@@ -84,7 +84,7 @@ export const signin = async (req, res) => {
     const token = jwt.sign(
       {
         userId: user._id.toString(),
-        username: user.username,
+        username: user.email,
       },
       process.env.JWT_SECRET,
       { expiresIn: "24h" } // Optional: Set token expiration

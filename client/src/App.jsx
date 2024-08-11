@@ -1,28 +1,23 @@
-import React from "react";
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Signup } from "./authComponent/Signup";
-import { Signin } from "./authComponent/Signin";
-import { Landing } from "./pages/Landing";
-import { UpdateProfile } from "./pages/UpdateProfile";
-import { Home } from "./pages/Home";
-import { Profile } from "./components/Profile";
-import { Provider } from "react-redux";
+import { LandingPage } from "./pages/LandingPage";
+import { Signup } from "./pages/Signup";
+import { Signin } from "./pages/Signin";
 
-import store from "./store";
 function App() {
+  const [count, setCount] = useState(0);
+
   return (
-    <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<Signup />} />
-          <Route path="/login" element={<Signin />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/updateProfile" element={<UpdateProfile />} />
-        </Routes>
-      </Router>
-    </Provider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/register" element={<Signup />} />
+        <Route path="/login" element={<Signin />} />
+      </Routes>
+    </Router>
   );
 }
 
