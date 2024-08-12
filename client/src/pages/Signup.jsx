@@ -14,6 +14,7 @@ export const Signup = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const handlerSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -26,6 +27,7 @@ export const Signup = () => {
         password,
       });
       toast.success("SignUp Successful!");
+
       console.log("submitted", response.data);
       dispatch(setUsername(usernameInput));
       navigate(`/profile/${usernameInput}`);

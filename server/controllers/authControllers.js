@@ -49,6 +49,7 @@ export const register = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(201).json({
@@ -88,7 +89,7 @@ export const signin = async (req, res) => {
         username: user.email,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" } // Optional: Set token expiration
+      { expiresIn: "7d" } // Optional: Set token expiration
     );
 
     // Set the JWT token as a cookie
@@ -96,6 +97,7 @@ export const signin = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({

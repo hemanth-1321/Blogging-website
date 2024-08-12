@@ -26,9 +26,18 @@ import {
 const router = express.Router();
 
 //auth Routes
+
 router.post("/register", register);
 router.post("/login", signin);
-router.post("/logout", logout);
+router.post("/logout", authenticate, logout);
+
+// Add this route at the appropriate place in your routes.js file
+router.get("/check-auth", authenticate, (req, res) => {
+  res.status(200).json({
+    isAuthenticated: true,
+    username: req.user.username, // Assuming the authenticate middleware attaches the user to the request object
+  });
+});
 
 //post Routes
 router.post("/posts/create", authenticate, createPost); // Use the upload middleware

@@ -10,7 +10,9 @@ export const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); // Corrected to camelCase
   const [loading, setLoading] = useState(false); // Include the loading state
+  const [sucess, setSucess] = useState(false);
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const username = useSelector((state) => state.user.username);
   console.log(username);
@@ -20,11 +22,17 @@ export const Signin = () => {
     setLoading(true); // Set loading to true at the start of the submission
 
     try {
-      const response = await axiosInstance.post("/login", {
-        email,
-        password,
-      });
-      const { username } = response.data;
+      const response = await axiosInstance.post(
+        "/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      const { username, token } = response.data;
+      localStorage.setItem("authToken", token);
       dispatch(setUsername(username));
       toast.success("SignUp Successful!");
       console.log("submitted", response.data);
